@@ -3,7 +3,7 @@
 ## Fiche d'Identité
 
 *   **Type de projet :** Projet Club
-*   **Team Lead :** [Nom du Team Lead]
+*   **Team Lead :** Cyrille Bernier
 *   **Partenaire Académique/Industriel :** N/A
 *   **Effectif recherché :** 4 membres
 *   **Profils recherchés :** Génie mécanique, Impression 3D, Robotique, Électronique
