@@ -46,6 +46,5 @@ Tu vas aimer ce projet si :
 *   Tu veux apprendre les techniques d'impression 3D et d'assemblage robotique professionnel
 
 ## Contact & Liens Utiles
-*   **Contact :** [Email du Team Lead]
 *   **Documentation :** [Poppy Project Documentation](https://docs.poppy-project.org/)
 *   **Référence :** [GitHub Poppy](https://github.com/poppy-project)
