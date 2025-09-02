@@ -26,7 +26,7 @@ Imprimer en 3D et assembler un robot humanoïde Poppy open-source, comprenant l'
 
 | Semaine | Activité/Phase |
 | :-----: | :------------- |
-|  **1-2**  | **Planification** - Étude des plans, commande des matériaux et pièces |
+|  **1-2**  | **Planification** - Étude des plans |
 |  **3-6**  | **Impression 3D** - Production intensive des composants mécaniques |
 |  **7-8**  | **Post-traitement** - Finition et préparation des pièces imprimées |
 |  **9-12** | **Assemblage mécanique** - Montage des articulations et structure |
