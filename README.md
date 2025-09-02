@@ -46,5 +46,5 @@ Tu vas aimer ce projet si :
 *   Tu veux apprendre les techniques d'impression 3D et d'assemblage robotique professionnel
 
 ## Contact & Liens Utiles
-*   **Documentation :** [Poppy Project Documentation](https://docs.poppy-project.org/)
+*   **Documentation :** [Poppy Project Documentation](https://docs.poppy-project.org/en/assembly-guides/poppy-humanoid/)
 *   **Référence :** [GitHub Poppy](https://github.com/poppy-project)
