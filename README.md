@@ -48,3 +48,4 @@ Tu vas aimer ce projet si :
 ## Contact & Liens Utiles
 *   **Documentation :** [Poppy Project Documentation](https://docs.poppy-project.org/en/assembly-guides/poppy-humanoid/)
 *   **Référence :** [GitHub Poppy](https://github.com/poppy-project)
+*   **Fichiers imprimables des Body Parts de Poppy:** [Fichiers imprimables](https://github.com/poppy-project/poppy-humanoid/releases/download/hardware_1.0.1/STL_3D_printed_parts.zip)
