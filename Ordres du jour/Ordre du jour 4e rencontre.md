@@ -1,0 +1,4 @@
+- Merci Zach pour les impressions !
+- Finaliser l'installation des logiciels pour la configuration des moteurs.
+- Test de configuration des moteurs.
+- Assemblage.
