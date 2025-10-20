@@ -1,0 +1,2 @@
+- Remplir le CrabFit pour la formation sur SW
+- Commencer à assembler.
