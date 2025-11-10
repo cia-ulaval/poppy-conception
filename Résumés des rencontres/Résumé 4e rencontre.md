@@ -9,7 +9,7 @@
 # Procédure installation poppy-configure
 - Être sur Linux.
 - Installer un environnement python dans un dossier local.
-- Activer cet environnement python avec une commande de type source/bin/activate
+- Activer cet environnement python avec une commande de type "source bin/activate" (dans poppy-env)
 - Installer poppy-configure : python3 install poppy-humanoid
 - Commande pour configurer : poppy-configure humanoid < motorname >
 
