@@ -7,5 +7,4 @@
 - Définir le plan de présentation : 
     - Points forts, défis, checkpoints, techniques et méthdoes.
     - 5 minutes de présentation.
-
-- (faire des mandats !!!)
+- Affiche ?
