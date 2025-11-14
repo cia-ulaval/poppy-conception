@@ -1,0 +1,2 @@
+- Écrire un guide d'utilisation pour l'imprimante
+- Faire une liste de toutes les pièces de Poppy
