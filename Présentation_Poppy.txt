@@ -1,0 +1,4 @@
+Une équipe de cinq personnes se rassemble autour du projet Poppy Humanoid (Conception) de façon hebdomadaire. Le but est simple: assembler un robot humanoïde [The Poppy Project](https://www.poppy-project.org/en/) composé de pièces imprimées en 3D et de servo-moteurs. 
+Pour ce faire, les membres de l'équipe se sont séparés les tâches: paramétrisation de [l'imprimante Bambu](https://ca.store.bambulab.com/collections/3d-printer?srsltid=AfmBOoqz_lw-R0tqmbofBcaVd6WqswGFckWSF40JmZSWcUNUZUcdIp4k), configuration logicielle des moteurs, assemblage mécanique des membres. Très concrètement, Poppy Conception, c'est des Legos pour adultes !
+
+À court terme, ce projet permettra à l'équipe de simulation d'apprendre à Poppy à marcher ! Et bien plus encore...
