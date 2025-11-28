@@ -1,5 +1,9 @@
 # Poppy Humanoid (Conception) 🛠️
 
+## Documentation (_How to Poppy_)
+Visiter ce [Google Docs](https://docs.google.com/document/d/1xX1RbV6WdlQWjZE55EWiICiZSR_HosOSyKKz-T2dgOk/edit?usp=sharing)
+
+
 ## Fiche d'Identité
 
 *   **Type de projet :** Projet Club
