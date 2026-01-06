@@ -1,5 +1,10 @@
 # Poppy Humanoid (Conception) 🛠️
 
+## Documentation (_How to Poppy_)
+- Visiter ce [Google Docs](https://docs.google.com/document/d/1xX1RbV6WdlQWjZE55EWiICiZSR_HosOSyKKz-T2dgOk/edit?usp=sharing).
+- Tu trouveras dans ce document les points marquants de la conception du robot, ainsi que de toutes les manoeuvres et manipulations nécessaires à son bon fonctionnement.
+
+
 ## Fiche d'Identité
 
 *   **Type de projet :** Projet Club
