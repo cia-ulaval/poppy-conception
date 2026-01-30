@@ -8,6 +8,7 @@
 
 
 # À faire : 
+- Souder les fils pour l'alimentation du Rpi
 - Achever la connexion réseau de Poppy (Samy et Laurik)
 - Mieux déterminer la nature et l'emplacement des batteries sur Poppy (Zach et Cyrille)
 - Poursuivre le travail sur le logo de l'AESGUL.
