@@ -4,6 +4,7 @@
 - Régler les jambes : 
     - Par herborist (reconfiguration des moteurs) ?
     - Par la mécanique ? (Par l'assemblage)
+- Souder
 
 - Peut-être installer les aimants sur la tête.
 - Tester d'Autres positions de base.
