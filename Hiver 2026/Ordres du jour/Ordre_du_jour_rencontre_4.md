@@ -6,6 +6,8 @@
     - Par la mécanique ? (Par l'assemblage)
 - Souder
 
+- Configure motors correctly
+
 - Peut-être installer les aimants sur la tête.
 - Tester d'Autres positions de base.
 - Régler la tête qui se positionne mal dans la position standing.
