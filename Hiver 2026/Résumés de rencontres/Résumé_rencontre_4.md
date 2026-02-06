@@ -26,6 +26,5 @@
 - Aucun
 
 # À faire:
-- changer le mot de passe de Poppy.
+- Changer le mot de passe de Poppy.
 - Designer le cable management.
-- 
