@@ -57,3 +57,5 @@ Tu vas aimer ce projet si :
 *   **Excel des pièces:** [Excel](https://ulavaldti-my.sharepoint.com/:x:/r/personal/cyber18_ulaval_ca/Documents/Poppy%20pi%C3%A8ces.xlsx?d=we67d0848775541a08d8f85ca3fd67f8b&csf=1&web=1&e=Fpmc5E)
 *   **Playlist vidéos d'assemblage:** [Playlist](https://www.youtube.com/watch?v=SUlM_mE3plc&list=PL8wg9_Kkof8wwqgfFu0iCij73C-4gt95x&index=2)
 *   **[Body parts en format .sldprt](https://github.com/poppy-project/Poppy-multiarticulated-torso/tree/dffc1e8f4aaba17622789be21f6563d275080ec6/parts)**
+
+- **[Documentation des moteurs qui n'avaient pas d'allure](https://ulavaldti-my.sharepoint.com/:x:/g/personal/cyber18_ulaval_ca/IQDmeS0tiUcpSrYruJAAcc10AX4TU4iCfaX-LsLGC0McrcA?e=XblEjz)**
