@@ -59,3 +59,5 @@ Tu vas aimer ce projet si :
 *   **[Body parts en format .sldprt](https://github.com/poppy-project/Poppy-multiarticulated-torso/tree/dffc1e8f4aaba17622789be21f6563d275080ec6/parts)**
 
 - **[Documentation des moteurs qui n'avaient pas d'allure](https://ulavaldti-my.sharepoint.com/:x:/g/personal/cyber18_ulaval_ca/IQDmeS0tiUcpSrYruJAAcc10AX4TU4iCfaX-LsLGC0McrcA?e=XblEjz)**
+- [Documentation Poppy Eve](https://github.com/poppy-project/Poppy-eva-head-design#poppy-eve-head-design)
+
