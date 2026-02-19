@@ -13,6 +13,9 @@
 - Il nous faut un BMS. Le BMS est le module de protection dont on parlait.
 - On pourrait (il serait même souhaitable) brancher deux (2) batteries en série. De cette façon, on pourra sélectionner des batteries ayant moins d'énergie stockée, et donc un volume moindre. Nous placerions deux batteries, une sur chaque flanc de Poppy.
 
+- [Meilleur spécimen qu'on a](https://ca.lightmalls.com/12v-4000mah-18650-lithium-ion-dc-12-6v-super-rechargeable-battery-pack?ff=6&fp=7295&gad_source=1&gad_campaignid=17426280671&gbraid=0AAAAADt5-bJ4q2bdtR2RqKZJN3448fhDG&gclid=Cj0KCQiAhtvMBhDBARIsAL26pjHKWbNLTPhlK_QOtZwIEX-21fVZBIJFR5eLqMiWIMSheYQp7mQUz74aApmwEALw_wcB). 
+    - Specs : 4000 mAh, 12V, 7x5x2 cm. Calcul : 38.4 minutes à elle seule à 60W. Donc pour deux batteries comme ça, ça fait 76.8 minutes !
+    
 
 
 | Type Batterie | Avantage | Désavantages |
