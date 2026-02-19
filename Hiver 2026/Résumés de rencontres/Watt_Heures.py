@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 
 
 def temps(Wh, W=60):
+    Wh = 0.8 * Wh
     sec = Wh*3600 / W
     minutes = sec/60
-    heures = sec/3600
-    return (Wh, sec, minutes, heures)
+
+    return f"Pour {round(Wh,2)} Wh, ça donnerait {round(minutes,2)} minutes à décharger la batterie à {W} watts"
 
 
-for énergie in range(10, 100, 10):
-    print(temps(énergie, W=70))
+print(temps(Wh=4000*12/1000))
 
-print(temps(Wh = 10000*12/1000, W=60))
+
+
