@@ -61,3 +61,50 @@ Tu vas aimer ce projet si :
 - **[Documentation des moteurs qui n'avaient pas d'allure](https://ulavaldti-my.sharepoint.com/:x:/g/personal/cyber18_ulaval_ca/IQDmeS0tiUcpSrYruJAAcc10AX4TU4iCfaX-LsLGC0McrcA?e=XblEjz)**
 - [Documentation Poppy Eve](https://github.com/poppy-project/Poppy-eva-head-design#poppy-eve-head-design)
 
+# Démarrage du projet
+
+---
+
+## Prérequis
+
+- Dockers : <https://docs.docker.com/desktop/#next-steps>
+
+---
+
+## Démarrage rapide
+
+```bash
+docker compose up -d
+```
+
+une fois démaré le conteneur est relié en temps réel au dossier src du projet.
+
+---
+
+## Commandes utiles
+
+```bash
+# Démarrer
+docker compose up -d
+
+# Arrêter
+docker compose down
+
+# Attacher au conteneur
+sudo docker attach poppy-dev
+
+#détacher du conteneur (ne pas executer dans ton terminal)
+exit
+
+# Voir les logs
+docker compose logs -f
+
+# Reconstruire après modification de Package.json ou Dockerfile
+docker compose up -d --build
+
+# pour avoir de l'aide à propos des commandes dockers
+docker --help
+docker compose --help
+
+```
+

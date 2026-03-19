@@ -1,0 +1,32 @@
+services:
+  poppy-ros2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      
+    container_name: poppy-dev
+
+    # 0. Utilise l'id de l'utilisateur actuel pour éviter les problèmes de permissions sur les fichiers créés dans le conteneur
+    user: "${UID:-1000}:${GID:-1000}"
+    
+    # 1. Persistance : lie le dossier local au conteneur
+    volumes:
+      - ./src:/ros2_ws
+      
+    # 2. Réseau : indispensable pour la découverte des nœuds ROS 2
+    network_mode: host
+    
+    # 3. Accès matériel (GPIO, I2C, Serial)
+    privileged: true
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/i2c-1:/dev/i2c-1"
+    
+    # 4. Garde le conteneur ouvert pour le développement
+    stdin_open: true
+    tty: true
+    
+    # Variables d'environnement pour le Raspberry Pi
+    environment:
+      - ROS_DOMAIN_ID=42
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
