@@ -4,14 +4,21 @@ FROM ros:rolling-perception
 RUN apt-get update -q && \
     apt-get upgrade -yq && \
     apt-get install -yq --no-install-recommends \
-    build-essential \
-    python3-colcon-common-extensions \
-    ros-rolling-rmw-cyclonedds-cpp \
-    python3-rosdep \
-    git \
+            build-essential \
+            python3-colcon-common-extensions \
+            ros-rolling-rmw-cyclonedds-cpp \
+            python3-rosdep \
+            python3-pip \
+            udev \
+            git \
     && rm -rf /var/lib/apt/lists/*
 
+RUN  pip3 install --no-cache-dir dynamixel-sdk --break-system-packages
+
 WORKDIR /ros2_ws
+
+
+    
 
 # Sourcing automatique pour chaque nouveau terminal
 RUN echo "source /opt/ros/rolling/setup.bash" >> ~/.bashrc

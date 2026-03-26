@@ -6,12 +6,11 @@ services:
       
     container_name: poppy-dev
 
-    # 0. Utilise l'id de l'utilisateur actuel pour éviter les problèmes de permissions sur les fichiers créés dans le conteneur
-    user: "${UID:-1000}:${GID:-1000}"
     
     # 1. Persistance : lie le dossier local au conteneur
     volumes:
       - ./src:/ros2_ws
+      - /tmp/.X11-unix:/tmp/.X11-unix
       
     # 2. Réseau : indispensable pour la découverte des nœuds ROS 2
     network_mode: host
@@ -30,3 +29,4 @@ services:
     environment:
       - ROS_DOMAIN_ID=42
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - DISPLAY=:0
