@@ -1,4 +1,8 @@
-
+# API
+## Fait
+- Exploration
+- Set-uppé le SSH.
+- AUTRE dont je ne me souviens plus.
 
 Batteries : 
 - 8 x 3.8 x 4.5 cm
