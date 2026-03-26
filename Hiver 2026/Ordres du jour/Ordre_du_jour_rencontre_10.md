@@ -6,3 +6,11 @@
 - Commander l'électronique.
 - Cadder le sac à dos.
 - Exporter le fichier du sac à dos et celui du torse de façon à pouvoir les imprimer..
+- Est-ce que l'API sera prêt pour le 9 avril prochain ?
+- 
+
+
+
+Hardware
+- Pendaison de Poppy.
+- Cadder.
