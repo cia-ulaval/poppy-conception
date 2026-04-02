@@ -3,7 +3,7 @@ from dynamixel_sdk import COMM_SUCCESS, PortHandler,PacketHandler
 
 PORTS = ['/dev/ttyACM0','/dev/ttyACM1']
 PROTOCOL = 1.0
-ID_RANGE = range(1, 255)
+ID_RANGE = range(1, 253)
 BAUDRATE = 1000000
 
 
@@ -36,12 +36,21 @@ class MotorController:
             4: self.packet_handler.read4ByteTxRx,
         }
 
+        print("Opening Port Handlers...")
         for port_handler in self.port_handlers:
             if not port_handler.openPort():
                 raise IOError(f"Cannot open port {port_handler.getPortName()}")
-            port_handler.setBaudRate(BAUDRATE)
-        
+
+        print("Setting Baud Rates...")
+        for port_handler in self.port_handlers:
+            if not port_handler.setBaudRate(BAUDRATE):
+                raise IOError(f"Failed to set baud rate for port {port_handler.getPortName()}")
+            
+            
+        print("Scanning for motors and creating ID to port mapping...")
         self._create_id_port_map()
+        print("MotorController initialized successfully")
+        
 
     def _create_id_port_map(self):
         """
@@ -50,10 +59,15 @@ class MotorController:
         """
         for port_handler in self.port_handlers:
             for motor_id in ID_RANGE:
-                dxl_comm_result, _, _ = self.packet_handler.ping(port_handler, motor_id)
-                if dxl_comm_result == COMM_SUCCESS:
+                _ , result, _ = self.packet_handler.ping(port_handler, motor_id)
+                if result == COMM_SUCCESS:
                     self.id_port_map[motor_id] = port_handler
 
+    def get_motors(self) -> list:
+        """
+        Returns a list of all motor IDs that are currently mapped to ports.
+        """
+        return list(self.id_port_map.keys())
 
     def write(self, motor_id: int, address: int,value: int, byte_size: int) -> None:
         """

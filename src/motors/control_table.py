@@ -1,133 +1,169 @@
 
 """
-Dynamixel Protocol 1.0 - Control Table Addresses
+Dynamixel Protocol 1.0 — Control Table Addresses
 =================================================
-Covers: AX series (AX-12A, AX-18A, AX-12W)
-        MX series (MX-12W, MX-28, MX-64, MX-106)
+Structure
+---------
+  EEPROM          — addresses shared across AX, MX-28/64, and MX-106
+  RAM             — addresses shared across AX, MX-28/64, and MX-106
+                    (addresses 26–29 are excluded: they differ per family)
 
-Control Table is split into two memory regions:
-  - EEPROM  : Persistent across power cycles (addresses 0–23).
-               Write only when Torque Enable = 0.
-  - RAM     : Reset to defaults on power-on (addresses 24+).
+  AXRAMDiff       — AX-only RAM registers (compliance, addresses 26–29)
+  MXEEPROMDiff    — MX-28/64-only EEPROM registers (multi-turn, resolution)
+  MXRAMDiff       — MX-28/64-only RAM registers (PID gains 26–29, realtime
+                    tick, goal acceleration)
+  MX106EEPROMDiff — MX-106-only EEPROM registers (same extras as MX + higher
+                    voltage limit default — documented in class docstring)
+  MX106RAMDiff    — MX-106-only RAM registers (PID, realtime tick, current,
+                    torque control mode, goal torque, goal acceleration)
 
-Byte sizes:
-  - 1-byte  : use write1ByteTxRx / read1ByteTxRx
-  - 2-byte  : use write2ByteTxRx / read2ByteTxRx
-              (stored Little-Endian; low byte at the listed address)
-
-Sources: ROBOTIS e-Manual
-  https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
-  https://emanual.robotis.com/docs/en/dxl/mx/mx-28/
-  https://emanual.robotis.com/docs/en/dxl/mx/mx-64/
-  https://emanual.robotis.com/docs/en/dxl/mx/mx-106/
+Sources (ROBOTIS e-Manual):
+    AX-12A : https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
+    MX-28  : https://emanual.robotis.com/docs/en/dxl/mx/mx-28/
 """
 
-from enum import  IntEnum
+from enum import IntEnum
 
-# ---------------------------------------------------------------------------
-# Shared EEPROM area  (AX and MX — identical addresses)
-# -------------------------------------------------------------------------
+
+# ===========================================================================
+# Common EEPROM  —  identical address and meaning on AX, MX-28/64, MX-106
+# ===========================================================================
 
 class EEPROMAddress(IntEnum):
-    """
-    Non-volatile EEPROM region.
-    Values survive power cycles. Write only while Torque Enable = 0.
-    """
-    MODEL_NUMBER_L          = 0   # 2-byte  R    Model number (low byte)
-    MODEL_NUMBER_H          = 1   # 2-byte  R    Model number (high byte)
-    FIRMWARE_VERSION        = 2   # 1-byte  R    Firmware version
-    ID                      = 3   # 1-byte  RW   Motor ID  (0–253; 254 = broadcast)
-    BAUD_RATE               = 4   # 1-byte  RW   Baud rate selector (see BaudRate enum)
-    RETURN_DELAY_TIME       = 5   # 1-byte  RW   Status packet delay  (unit: 2 µs)
-    CW_ANGLE_LIMIT_L        = 6   # 2-byte  RW   CW  angle limit low  (0–1023 AX / 0–4095 MX)
-    CW_ANGLE_LIMIT_H        = 7   # 2-byte  RW   CW  angle limit high
-    CCW_ANGLE_LIMIT_L       = 8   # 2-byte  RW   CCW angle limit low
-    CCW_ANGLE_LIMIT_H       = 9   # 2-byte  RW   CCW angle limit high
-    # Address 10 reserved
-    TEMPERATURE_LIMIT       = 11  # 1-byte  RW   Max internal temp (°C); default 70–80
-    MIN_VOLTAGE_LIMIT       = 12  # 1-byte  RW   Min operating voltage (unit: 0.1 V)
-    MAX_VOLTAGE_LIMIT       = 13  # 1-byte  RW   Max operating voltage (unit: 0.1 V)
-    MAX_TORQUE_L            = 14  # 2-byte  RW   Max torque limit low  (0–1023, unit: ~0.1 %)
-    MAX_TORQUE_H            = 15  # 2-byte  RW   Max torque limit high
-    STATUS_RETURN_LEVEL     = 16  # 1-byte  RW   When to send status packets (see StatusReturn enum)
-    ALARM_LED               = 17  # 1-byte  RW   Bitmask: LED blinks on these errors
-    ALARM_SHUTDOWN          = 18  # 1-byte  RW   Bitmask: motor shuts down on these errors
-    # Addresses 19–23 reserved / model-specific
+    MODEL_NUMBER        = 0   # 2-byte  R    Model number
+    FIRMWARE_VERSION    = 2   # 1-byte  R    Firmware version
+    ID                  = 3   # 1-byte  RW   Motor ID (0–253; 254 = broadcast)
+    BAUD_RATE           = 4   # 1-byte  RW   Baud rate selector (see BaudRate enum)
+    RETURN_DELAY_TIME   = 5   # 1-byte  RW   Status packet delay (unit: 2 µs)
+    CW_ANGLE_LIMIT      = 6   # 2-byte  RW   CW  angle limit (0–1023 AX / 0–4095 MX)
+    CCW_ANGLE_LIMIT     = 8   # 2-byte  RW   CCW angle limit (0–1023 AX / 0–4095 MX)
+    TEMPERATURE_LIMIT   = 11  # 1-byte  RW   Max internal temperature (°C)
+    MIN_VOLTAGE_LIMIT   = 12  # 1-byte  RW   Min operating voltage (unit: 0.1 V)
+    MAX_VOLTAGE_LIMIT   = 13  # 1-byte  RW   Max operating voltage (unit: 0.1 V)
+    MAX_TORQUE          = 14  # 2-byte  RW   Max torque (0–1023, unit: ~0.1 %)
+    STATUS_RETURN_LEVEL = 16  # 1-byte  RW   When to send status packets
+    ALARM_LED           = 17  # 1-byte  RW   Bitmask: LED blinks on these errors
+    SHUTDOWN            = 18  # 1-byte  RW   Bitmask: motor shuts down on these errors
 
 
-# ---------------------------------------------------------------------------
-# Shared RAM area  (AX and MX — identical addresses 24–49)
-# ---------------------------------------------------------------------------
+# ===========================================================================
+# Common RAM  —  identical address and meaning on AX, MX-28/64, MX-106
+# ===========================================================================
 
 class RAMAddress(IntEnum):
-    """
-    Volatile RAM region. Resets to defaults on every power-on.
-    All motion-control writes go here.
-    """
-    TORQUE_ENABLE           = 24  # 1-byte  RW   0 = free / 1 = torque on
-    LED                     = 25  # 1-byte  RW   0 = off / 1 = on
-
-    # --- Compliance (AX series only; addresses 26–29) ---
-    # MX series replaces these four bytes with PID gains (see MXRAMAddress).
-    CW_COMPLIANCE_MARGIN    = 26  # 1-byte  RW   Dead-band CW  side  (0–255)
-    CCW_COMPLIANCE_MARGIN   = 27  # 1-byte  RW   Dead-band CCW side  (0–255)
-    CW_COMPLIANCE_SLOPE     = 28  # 1-byte  RW   Torque flexibility CW  (7 levels)
-    CCW_COMPLIANCE_SLOPE    = 29  # 1-byte  RW   Torque flexibility CCW (7 levels)
-
-    GOAL_POSITION_L         = 30  # 2-byte  RW   Target position low  (0–1023 AX / 0–4095 MX)
-    GOAL_POSITION_H         = 31  # 2-byte  RW   Target position high
-    MOVING_SPEED_L          = 32  # 2-byte  RW   Target speed low     (0–1023 joint / 0–2047 wheel)
-    MOVING_SPEED_H          = 33  # 2-byte  RW   Target speed high
-    TORQUE_LIMIT_L          = 34  # 2-byte  RW   Runtime torque limit low  (0–1023)
-    TORQUE_LIMIT_H          = 35  # 2-byte  RW   Runtime torque limit high
-
-    PRESENT_POSITION_L      = 36  # 2-byte  R    Current position low
-    PRESENT_POSITION_H      = 37  # 2-byte  R    Current position high
-    PRESENT_SPEED_L         = 38  # 2-byte  R    Current speed low
-    PRESENT_SPEED_H         = 39  # 2-byte  R    Current speed high
-    PRESENT_LOAD_L          = 40  # 2-byte  R    Current load low    (0–2047, bit10 = direction)
-    PRESENT_LOAD_H          = 41  # 2-byte  R    Current load high
-    PRESENT_VOLTAGE         = 42  # 1-byte  R    Current input voltage (unit: 0.1 V)
-    PRESENT_TEMPERATURE     = 43  # 1-byte  R    Current temperature  (°C)
-
-    REGISTERED              = 44  # 1-byte  R    1 if REG_WRITE instruction is pending
-    # Address 45 reserved
-    MOVING                  = 46  # 1-byte  R    1 while motor is moving toward goal
-    LOCK                    = 47  # 1-byte  RW   1 = EEPROM locked until power cycle
-    PUNCH_L                 = 48  # 2-byte  RW   Minimum drive current low  (0x20–0x3FF)
-    PUNCH_H                 = 49  # 2-byte  RW   Minimum drive current high
+   
+    TORQUE_ENABLE       = 24  # 1-byte  RW   0 = free / 1 = torque on
+    LED                 = 25  # 1-byte  RW   0 = off  / 1 = on
+    # 26–29 differ per family — see AXRAMDiff / MXRAMDiff / MX106RAMDiff
+    GOAL_POSITION       = 30  # 2-byte  RW   Target position
+    MOVING_SPEED        = 32  # 2-byte  RW   Target speed (0–1023 joint / 0–2047 wheel)
+    TORQUE_LIMIT        = 34  # 2-byte  RW   Runtime torque limit (0–1023)
+    PRESENT_POSITION    = 36  # 2-byte  R    Current position
+    PRESENT_SPEED       = 38  # 2-byte  R    Current speed
+    PRESENT_LOAD        = 40  # 2-byte  R    Current load (bit10 = direction)
+    PRESENT_VOLTAGE     = 42  # 1-byte  R    Input voltage (unit: 0.1 V)
+    PRESENT_TEMPERATURE = 43  # 1-byte  R    Internal temperature (°C)
+    REGISTERED          = 44  # 1-byte  R    1 if REG_WRITE instruction is pending
+    MOVING              = 46  # 1-byte  R    1 while motor is moving toward goal
+    LOCK                = 47  # 1-byte  RW   1 = EEPROM locked until power cycle
+    PUNCH               = 48  # 2-byte  RW   Minimum drive current
 
 
-# ---------------------------------------------------------------------------
-# MX-series-only RAM addresses  (replaces compliance bytes 26–29 with PID)
-# ---------------------------------------------------------------------------
+# ===========================================================================
+# AX-series differences
+# ===========================================================================
+
+class AXRAMAddress(IntEnum):
+    CW_COMPLIANCE_MARGIN    = 26  # 1-byte  RW   Dead-band CW  (0–255)
+    CCW_COMPLIANCE_MARGIN   = 27  # 1-byte  RW   Dead-band CCW (0–255)
+    CW_COMPLIANCE_SLOPE     = 28  # 1-byte  RW   Torque slope CW  (7 steps: 2,4,8,16,32,64,128)
+    CCW_COMPLIANCE_SLOPE    = 29  # 1-byte  RW   Torque slope CCW (7 steps: 2,4,8,16,32,64,128)
+
+
+# ===========================================================================
+# MX-28 / MX-64 differences
+# ===========================================================================
+
+class MXEEPROMAddress(IntEnum):
+    MULTI_TURN_OFFSET  = 20  # 2-byte  RW   Position offset applied in multi-turn mode
+    RESOLUTION_DIVIDER = 22  # 1-byte  RW   Divides encoder resolution (1–4)
+
 
 class MXRAMAddress(IntEnum):
+    D_GAIN            = 26  # 1-byte  RW   Derivative gain
+    I_GAIN            = 27  # 1-byte  RW   Integral gain
+    P_GAIN            = 28  # 1-byte  RW   Proportional gain
+    REALTIME_TICK     = 50  # 2-byte  R    Time counter (ms); wraps at 32767
+    GOAL_ACCELERATION = 73  # 1-byte  RW   Goal acceleration (~8.583 °/s² per unit; 0 = max)
+
+
+
+
+
+# ===========================================================================
+# Helper enums for common register values
+# ===========================================================================
+
+class BaudRate(IntEnum):
     """
-    Extra RAM addresses present on MX-28 / MX-64 / MX-106 (Protocol 1.0).
-    Addresses 26–29 are PID gains on MX (not compliance as on AX).
-    Addresses 50+ are MX-exclusive features.
+    Selector values for EEPROM.BAUD_RATE (address 4).
+    Formula:  Speed (bps) = 2,000,000 / (Value + 1)
     """
+    BPS_1000000 = 1
+    BPS_500000  = 3
+    BPS_400000  = 4
+    BPS_250000  = 7
+    BPS_200000  = 9
+    BPS_115200  = 16
+    BPS_57600   = 34
+    BPS_19200   = 103
+    BPS_9600    = 207
 
-    # PID gains (overwrite AX compliance slots 26–29)
-    D_GAIN                  = 26  # 1-byte  RW   Derivative  gain
-    I_GAIN                  = 27  # 1-byte  RW   Integral    gain
-    P_GAIN                  = 28  # 1-byte  RW   Proportional gain
-    # Address 29 reserved on MX
 
-    # MX-exclusive EEPROM-region addresses
-    MULTI_TURN_OFFSET_L     = 20  # 2-byte  RW   Multi-turn offset low  (EEPROM)
-    MULTI_TURN_OFFSET_H     = 21  # 2-byte  RW   Multi-turn offset high (EEPROM)
-    RESOLUTION_DIVIDER      = 22  # 1-byte  RW   Resolution divider 1–4 (EEPROM)
+class StatusReturn(IntEnum):
+    """Values for EEPROM.STATUS_RETURN_LEVEL (address 16)."""
+    PING_ONLY = 0   # Reply only to PING
+    READ_ONLY = 1   # Reply to READ instructions as well
+    ALL       = 2   # Reply to every instruction (default)
 
-    # MX-exclusive RAM addresses
-    CURRENT_L               = 68  # 2-byte  R    Present current low   (MX-64 / MX-106 only)
-    CURRENT_H               = 69  # 2-byte  R    Present current high
-    TORQUE_CTRL_MODE_EN     = 70  # 1-byte  RW   1 = torque control mode (MX-64 / MX-106 only)
-    GOAL_TORQUE_L           = 71  # 2-byte  RW   Goal torque low        (MX-64 / MX-106 only)
-    GOAL_TORQUE_H           = 72  # 2-byte  RW   Goal torque high
-    GOAL_ACCELERATION       = 73  # 1-byte  RW   Goal acceleration (unit: ~8.583 °/s²; 0 = max)
 
+class AlarmBit(IntEnum):
+    """
+    Bitmask constants for EEPROM.ALARM_LED (addr 17) and EEPROM.SHUTDOWN (addr 18).
+    Combine with bitwise OR:
+        AlarmBit.OVERHEATING | AlarmBit.OVERLOAD
+    """
+    INPUT_VOLTAGE = 0x01
+    ANGLE_LIMIT   = 0x02
+    OVERHEATING   = 0x04
+    RANGE         = 0x08
+    CHECKSUM      = 0x10
+    OVERLOAD      = 0x20
+    INSTRUCTION   = 0x40
+
+
+class TorqueEnable(IntEnum):
+    """Values for RAM.TORQUE_ENABLE (address 24)."""
+    OFF = 0
+    ON  = 1
+
+
+class LEDState(IntEnum):
+    """Values for RAM.LED (address 25)."""
+    OFF = 0
+    ON  = 1
+
+
+class LockState(IntEnum):
+    """Values for RAM.LOCK (address 47)."""
+    UNLOCKED = 0
+    LOCKED   = 1   # Requires power cycle to unlock
+
+
+class TorqueCtrlMode(IntEnum):
+    """Values for MX106RAMDiff.TORQUE_CTRL_MODE (address 70)."""
+    DISABLED = 0   # Normal position / speed control
+    ENABLED  = 1   # Pure torque control via MX106RAMDiff.GOAL_TORQUE
 
 class ControlTable():
     """
@@ -135,12 +171,18 @@ class ControlTable():
     and MX-exclusive addresses. Use ControlTable.ADDRESS_NAME.value to get the
     integer address for read/write operations.
     """
-    # Shared EEPROM addresses (0–23)
-    EEPROM: EEPROMAddress = EEPROMAddress
-    # Shared RAM addresses (24–49)
-    RAM: RAMAddress = RAMAddress
-    # MX-exclusive RAM addresses (26–29 overwritten by PID gains; 50+ are MX-only)
-    MX_RAM: MXRAMAddress = MXRAMAddress
+    # Shared EEPROM addresses 
+    EEPROM: EEPROMAddress  = EEPROMAddress
+    # Shared RAM addresses 
+    RAM: RAMAddress  = RAMAddress
+    # AX-exclusive RAM addresses
+    AX_RAM: AXRAMAddress  = AXRAMAddress
+    # MX-exclusive EEPROM addresses
+    MX_EEPROM: MXEEPROMAddress  = MXEEPROMAddress
+    # MX-exclusive RAM addresses 
+    MX_RAM: MXRAMAddress  = MXRAMAddress
+    
+
 
 
 
