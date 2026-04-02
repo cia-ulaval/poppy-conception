@@ -9,7 +9,7 @@ services:
     
     # 1. Persistance : lie le dossier local au conteneur
     volumes:
-      - ./src:/ros2_ws
+      - .:/ros2_ws
       - /tmp/.X11-unix:/tmp/.X11-unix
       
     # 2. Réseau : indispensable pour la découverte des nœuds ROS 2
