@@ -11,6 +11,8 @@ class MotorCommands:
     def __init__(self):
         self.motor_control = MotorController()
 
+    # getters for configuration (EEPROM) operations
+
     def get_motor_ids(self) -> list:
         """
         Returns a list of motor IDs that are currently mapped to ports.
@@ -40,9 +42,9 @@ class MotorCommands:
         Reads the maximum CCW angle limit of the motor with the given ID.
         """
         return self.motor_control.read(motor_id, ControlTable.EEPROM.CCW_ANGLE_LIMIT.value, byte_size=2)
-    
 
-    # Getters for RAM addresses (read operations)
+
+    # Getters for RAM operations (read operations) 
     
     def get_goal_position(self, motor_id: int) -> int:
         """
@@ -96,7 +98,7 @@ class MotorCommands:
         self.motor_control.write(motor_id, ControlTable.RAM.TORQUE_ENABLE.value, enable_value, byte_size=1)
 
 
-    # Setters for RAM addresses (write operations)
+    # Setters for RAM operations
 
     def set_goal_position(self, motor_id: int, position: int) -> None:
         """
@@ -115,56 +117,10 @@ class MotorCommands:
         Sets the torque limit of the motor with the given ID.
         """
         self.motor_control.write(motor_id, ControlTable.RAM.TORQUE_LIMIT.value, torque_limit, byte_size=2)
-    
+
     def set_all_moving_speed(self, speed: int) -> None:
         """
         Sets the moving speed of all motors to the given value.
         """
         for motor_id in self.get_motor_ids():
             self.set_moving_speed(motor_id, speed)
-    
-    
-
-
-    
-    
-if __name__ == '__main__':
-    motor_commands = MotorCommands()
-    # Example usage:
-    motors = motor_commands.get_motor_ids()
-
-
-    for detected_motor in motors:
-        if detected_motor == 44:
-            motor = detected_motor
-            break
-
-    print(f"Detected motors: {motors}")
-    print(f"Model number of motor {motor}: {motor_commands.get_model_number(motor)}")
-    print(f"Present temperature of motor {motor}: {motor_commands.get_temperature(motor)} °C")
-    motor_commands.torque_enable(motor, True)
-    print(f"present position of motor {motor}: {motor_commands.get_present_position(motor)}")
-    print(f"CW angle limit of motor {motor}: {motor_commands.get_cw_angle_limit(motor)}")
-    print(f"CCW angle limit of motor {motor}: {motor_commands.get_ccw_angle_limit(motor)}")
-    print(f"Max torque of motor {motor}: {motor_commands.get_max_torque(motor)}")
-    print(f"max moving speed of motor {motor}: {motor_commands.get_moving_speed(motor)}")
-    
-    motor_commands.set_all_moving_speed( 200)
-    
-    start = time.perf_counter()
-    motor_commands.set_goal_position(motor, 512)
-    while time.perf_counter() - start < 10:  # Run for 10 seconds
-        present_position = motor_commands.get_present_position(motor)
-        if present_position <= 600:
-            motor_commands.set_goal_position(motor, 2048)
-            motor_commands.set_goal_position(motor-1, 2048)
-        if present_position >= 2000:
-            motor_commands.set_goal_position(motor, 512)
-            motor_commands.set_goal_position(motor-1, 1000)
-            
-    motor_commands.torque_enable(motor, False)
-    
-        
-        
-    
-
