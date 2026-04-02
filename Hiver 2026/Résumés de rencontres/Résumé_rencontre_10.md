@@ -25,6 +25,8 @@ Dimensions :
 
 ## Software
 - API set-uppé.
+- Images de Poppy affichées dans le terminal par Tkinter. (Laurik)
+- Bonhomme sourire de Poppy.
 
 
 # À faire
