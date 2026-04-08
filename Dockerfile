@@ -6,7 +6,7 @@ RUN apt-get update -q && \
     apt-get install -yq --no-install-recommends \
             build-essential \
             python3-colcon-common-extensions \
-            ros-rolling-rmw-cyclonedds-cpp \
+            ros-rolling-rosbridge-server \
             python3-rosdep \
             python3-pip \
             udev \
