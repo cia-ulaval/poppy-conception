@@ -27,8 +27,8 @@ class MotorNode(Node):
         motor_ids = self.message_mapper.map_motor_names_to_ids(motor_ids)
         motor_positions = self.convert_angles_to_motor_positions(angles_rad, motor_ids)
         self.get_logger().info(f"Received motor command for IDs {motor_ids}.\nConverted to positions {motor_positions}.")
-        for id, position in zip(motor_ids, motor_positions):
-            self.motor_commands.set_goal_position(id, position)
+        for motor_id, position in zip(motor_ids, motor_positions):
+            self.motor_commands.set_goal_position(motor_id, position)
 
     def convert_angles_to_motor_positions(self, angles_rad:list[float],ids:list[int]) -> list[int]:
         # Placeholder conversion function - replace with actual conversion logic
@@ -36,9 +36,9 @@ class MotorNode(Node):
         zero_Ax = 512   # Example zero position for AX series motors
         motor_positions = []
        
-        for id, angle in zip(ids, angles_rad):
+        for motor_id, angle in zip(ids, angles_rad):
             # Simple linear conversion for demonstration purposes
-            if id == 37 or id == 36:  # Example for MX series motor
+            if motor_id == 37 or motor_id == 36:  # Example for MX series motor
                 motor_position = int(zero_Ax + (angle / (2 * 3.14159)) * 1024)  # Convert radians to motor position
             else:
                 motor_position = int(zero_mx + (angle / (2 * 3.14159)) * 4096)  # Convert radians to motor position

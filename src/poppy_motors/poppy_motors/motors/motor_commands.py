@@ -115,9 +115,9 @@ class MotorCommands:
         """
         Sets the goal position of the motor with the given ID.
         """
-        min = self.get_cw_angle_limit(motor_id)
-        max = self.get_ccw_angle_limit(motor_id)
-        if position > min and position < max:
+        min_angle = self.get_cw_angle_limit(motor_id)
+        max_angle = self.get_ccw_angle_limit(motor_id)
+        if position > min_angle and position < max_angle:
             self.motor_control.write(motor_id, ControlTable.RAM.GOAL_POSITION.value, position, byte_size=2)
 
     def set_moving_speed(self, motor_id: int, speed: int) -> None:

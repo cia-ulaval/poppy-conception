@@ -1,5 +1,4 @@
-import json
-import time
+
 
 from poppy_motors.motor_msg_mapper import MotorMsgMapper
 import rclpy
@@ -22,7 +21,8 @@ class MotorNode(Node):
 
 
     def listener_callback(self, msg):
-        message = json.loads(msg.data)
+        # message = json.loads(msg.data)
+        pass
         
         
     def _set_initial_postion(self):
@@ -74,9 +74,8 @@ def main(args=None):
 
     try:
         rclpy.spin(motor_node)
-    except Exception as e:
+    except KeyboardInterrupt:
         print("Shutting down motor node...")
-        print(f"Error occurred: {e}")
     finally:
         motor_node.destroy_node()
         rclpy.shutdown()
