@@ -111,7 +111,7 @@ class MotorController:
         elif error != 0:
             raise IOError(f"Error from motor ID {motor_id} at address {address}: {self.packet_handler.getRxPacketError(error)}")
         
-        return value    
+        return value  
 
 
     def close(self):
@@ -120,8 +120,5 @@ class MotorController:
         """
         for port_handler in self.port_handlers:
             port_handler.closePort()
+    
 
-
-
-if __name__ == '__main__': 
-    print("hello world")

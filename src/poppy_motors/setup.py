@@ -26,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'motor_node = poppy_motors.motor_node:main',
+            'motor_node_test = poppy_motors.motor_node_test:main',
         ],
     },
 )

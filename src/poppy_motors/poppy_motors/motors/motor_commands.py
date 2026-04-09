@@ -104,11 +104,21 @@ class MotorCommands:
         for motor_id in self.get_motor_ids():
             self.torque_enable(motor_id, False)
 
-    def set_goal_position(self, motor_id: int, position: int) -> None:
+    def torque_enable_all(self) -> None:
+        """
+        Enables torque on all motors.
+        """
+        for motor_id in self.get_motor_ids():
+            self.torque_enable(motor_id, True)
+
+    def set_goal_position(self, motor_id: int, position: float) -> None:
         """
         Sets the goal position of the motor with the given ID.
         """
-        self.motor_control.write(motor_id, ControlTable.RAM.GOAL_POSITION.value, position, byte_size=2)
+        min = self.get_cw_angle_limit(motor_id)
+        max = self.get_ccw_angle_limit(motor_id)
+        if position > min and position < max:
+            self.motor_control.write(motor_id, ControlTable.RAM.GOAL_POSITION.value, position, byte_size=2)
 
     def set_moving_speed(self, motor_id: int, speed: int) -> None:
         """
@@ -122,9 +132,46 @@ class MotorCommands:
         """
         self.motor_control.write(motor_id, ControlTable.RAM.TORQUE_LIMIT.value, torque_limit, byte_size=2)
 
+    def set_all_torque_limit(self, torque_limit: int) -> None:
+        """
+        Sets the torque limit of all motors to the given value.
+        """
+        for motor_id in self.get_motor_ids():
+            self.set_torque_limit(motor_id, torque_limit)
+
     def set_all_moving_speed(self, speed: int) -> None:
         """
         Sets the moving speed of all motors to the given value.
         """
         for motor_id in self.get_motor_ids():
             self.set_moving_speed(motor_id, speed)
+
+    def reboot_motor(self, motor_id: int) -> None:
+        """
+        Reboots the motor with the given ID.
+        """
+       
+        current_alarm = self.motor_control.read(motor_id, ControlTable.EEPROM.SHUTDOWN.value, byte_size=1)
+        print(f"Motor {motor_id}: alarm shutdown register = {bin(current_alarm)}")
+        cleared = current_alarm & ~(1 << 5)  # clear bit 5 (overload)
+        self.motor_control.write(motor_id, ControlTable.EEPROM.SHUTDOWN.value, cleared, byte_size=1)
+        self.motor_control.write(motor_id, ControlTable.EEPROM.SHUTDOWN.value, 0, byte_size=1)
+
+    def reboot_all_motors(self) -> None:
+        """
+        Reboots all motors by disabling torque, clearing the overload alarm bit, and re-enabling torque.
+        """
+        for motor_id in self.get_motor_ids():
+            self.reboot_motor(motor_id)
+
+
+    def close_motors(self):
+        """
+        Closes the motor control connection.
+        """
+        self.motor_control.close()
+
+    
+
+    
+
