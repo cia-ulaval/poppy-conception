@@ -12,11 +12,12 @@ class MotorNode(Node):
         self.message_mapper = MotorMsgMapper()
         self.get_logger().info('Motor Node has been started.')
         self.motor_commands = MotorCommands()
-        self.motor_commands.reboot_all_motors()
+        self.motor_commands.torque_disable_all()
         self.motor_commands.torque_enable_all()
-        self.motor_commands.set_all_moving_speed(200) 
+        self.motor_commands.set_all_moving_speed(100) 
         self.motor_commands.set_all_torque_limit(500)  
         self._set_initial_postion()
+        self.create_timer(1, self._send_motor_commands)
         self.create_subscription(String, 'poppy_motor_state', self.listener_callback, 10)
 
 
@@ -39,23 +40,29 @@ class MotorNode(Node):
         self.motor_commands.set_goal_position(31, 2048)
         self.motor_commands.set_goal_position(32, 2048)
         self.motor_commands.set_goal_position(33, 2048)
-        self.motor_commands.set_goal_position(34, 2048)
+        self.motor_commands.set_goal_position(34, 2048 )
         self.motor_commands.set_goal_position(35, 2048)
-        self.motor_commands.set_goal_position(36, 512)
-        self.motor_commands.set_goal_position(37, 512)
+        self.motor_commands.set_goal_position(36, 512 )
+        self.motor_commands.set_goal_position(37, 512 )
         self.motor_commands.set_goal_position(41, 2048 + 1024)
         self.motor_commands.set_goal_position(42, 2048 + 1024)
         self.motor_commands.set_goal_position(43, 2048)
         self.motor_commands.set_goal_position(44, 2048)
-        self.motor_commands.set_goal_position(51, 2048 - 1024)
-        self.motor_commands.set_goal_position(52, 2048 - 1024)
-        self.motor_commands.set_goal_position(53, 2048)
+        self.motor_commands.set_goal_position(51, 2048 - 800)
+        self.motor_commands.set_goal_position(52, 2048 )
+        self.motor_commands.set_goal_position(53, 2048 + 800)
         self.motor_commands.set_goal_position(54, 2048) 
 
    
 
     def _send_motor_commands(self):
-        pass
+        print(self.motor_commands.get_ccw_angle_limit(37))
+        if self.motor_commands.get_present_position(54)  < 2100:
+            self.motor_commands.set_goal_position(54, 3500)
+        if self.motor_commands.get_present_position(54)  > 3400:
+            self.motor_commands.set_goal_position(54, 2048)
+        
+        
         
 
     def shutdown(self):

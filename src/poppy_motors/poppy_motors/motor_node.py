@@ -14,8 +14,8 @@ class MotorNode(Node):
         self.motor_commands = MotorCommands()
         self.motor_commands.torque_disable_all()  # Ensure all motors are disabled before starting
         self.motor_commands.torque_enable_all()
-        self.motor_commands.set_all_moving_speed(200)  # Set a default moving speed for all motors
-        self.motor_commands.set_all_torque_limit(500)  # Set a default torque limit for all motors
+        self.motor_commands.set_all_moving_speed(100)  # Set a default moving speed for all motors
+        self.motor_commands.set_all_torque_limit(400)  # Set a default torque limit for all motors
         self.create_subscription(String, 'poppy_motor_state', self.listener_callback, 10)
 
 
@@ -26,7 +26,7 @@ class MotorNode(Node):
     def _send_motor_commands(self, motor_ids:list[String], angles_rad:list[float]):
         motor_ids = self.message_mapper.map_motor_names_to_ids(motor_ids)
         motor_positions = self.convert_angles_to_motor_positions(angles_rad, motor_ids)
-        self.get_logger().info(f"Received motor command for IDs {motor_ids}.\nConverted to positions {motor_positions}.")
+        print(f"Received motor command for IDs {motor_ids}.\nConverted to positions {motor_positions}.")
         for motor_id, position in zip(motor_ids, motor_positions):
             self.motor_commands.set_goal_position(motor_id, position)
 
@@ -42,6 +42,9 @@ class MotorNode(Node):
                 motor_position = int(zero_Ax + (angle / (2 * 3.14159)) * 1024)  # Convert radians to motor position
             else:
                 motor_position = int(zero_mx + (angle / (2 * 3.14159)) * 4096)  # Convert radians to motor position
+                if motor_id == 11 or motor_id == 21 or motor_id == 42:  # Example for a specific motor that needs to be reversed
+                    motor_position = zero_mx - (motor_position - zero_mx)  # Reverse direction
+                  # Add an offset to the position
             motor_positions.append(motor_position)
         return motor_positions
 

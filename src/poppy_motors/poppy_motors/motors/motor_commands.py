@@ -102,14 +102,20 @@ class MotorCommands:
         Disables torque on all motors.
         """
         for motor_id in self.get_motor_ids():
-            self.torque_enable(motor_id, False)
+            try:
+                self.torque_enable(motor_id, False)
+            except IOError as e:
+                print(f"Error disabling torque for motor ID {motor_id}: {e}")
 
     def torque_enable_all(self) -> None:
         """
         Enables torque on all motors.
         """
         for motor_id in self.get_motor_ids():
-            self.torque_enable(motor_id, True)
+            try:
+                self.torque_enable(motor_id, True)
+            except IOError as e:
+                print(f"Error enabling torque for motor ID {motor_id}: {e}")
 
     def set_goal_position(self, motor_id: int, position: float) -> None:
         """
@@ -132,12 +138,6 @@ class MotorCommands:
         """
         self.motor_control.write(motor_id, ControlTable.RAM.TORQUE_LIMIT.value, torque_limit, byte_size=2)
 
-    def set_all_torque_limit(self, torque_limit: int) -> None:
-        """
-        Sets the torque limit of all motors to the given value.
-        """
-        for motor_id in self.get_motor_ids():
-            self.set_torque_limit(motor_id, torque_limit)
 
     def set_all_moving_speed(self, speed: int) -> None:
         """
@@ -145,6 +145,13 @@ class MotorCommands:
         """
         for motor_id in self.get_motor_ids():
             self.set_moving_speed(motor_id, speed)
+
+    def set_all_torque_limit(self, torque_limit: int) -> None:
+        """
+        Sets the torque limit of all motors to the given value.
+        """
+        for motor_id in self.get_motor_ids():
+            self.set_torque_limit(motor_id, torque_limit)
 
     def reboot_motor(self, motor_id: int) -> None:
         """
