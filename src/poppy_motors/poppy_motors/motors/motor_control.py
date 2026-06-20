@@ -219,7 +219,7 @@ class MotorController:
         value &= mask
         return [(value >> (8 * i)) & 0xFF for i in range(byte_size)]
     
-    def get_motors(self) -> list:
+    def get_motors(self) -> list[int]:
         """
         Returns a list of all motor IDs that are currently mapped to ports.
         """

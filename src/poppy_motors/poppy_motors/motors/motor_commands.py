@@ -11,7 +11,7 @@ class MotorCommands:
 
     # getters for configuration (EEPROM) operations
 
-    def get_motor_ids(self) -> list:
+    def get_motor_ids(self) -> list[int]:
         """
         Returns a list of motor IDs that are currently mapped to ports.
         """
@@ -62,6 +62,14 @@ class MotorCommands:
         """
         return self.motor_control.read(motor_id, ControlTable.RAM.MOVING_SPEED.value, byte_size=2)
     
+    def get_all_present_position_MX(self) -> dict[int,int]:
+        
+        motorsDict : dict ={}
+        for motor in self.motor_control.get_motors():
+            if self.get_model_number(motor) == (29 or 310): # Mx-64 and Mx-28 model numbers they can use bulk_read
+                motorsDict.update({motor:(ControlTable.RAM.PRESENT_POSITION.value, 2)})
+            
+        return self.motor_control.bulk_read(motorsDict)
 
     def get_present_position(self, motor_id: int) -> int:
         """
@@ -117,7 +125,7 @@ class MotorCommands:
             except IOError as e:
                 print(f"Error enabling torque for motor ID {motor_id}: {e}")
 
-    def set_goal_position(self, motor_id: int, position: float) -> None:
+    def set_goal(self, motor_id: int, position: int) -> None:
         """
         Sets the goal position of the motor with the given ID.
         """
@@ -125,6 +133,20 @@ class MotorCommands:
         max_angle = self.get_ccw_angle_limit(motor_id)
         if position > min_angle and position < max_angle:
             self.motor_control.write(motor_id, ControlTable.RAM.GOAL_POSITION.value, position, byte_size=2)
+    
+    def set_goal_percent(self, motor_id: int, percent: float):
+        """
+        Sets the percent goal position of the motor with the given ID.
+        """
+        min_angle = self.get_cw_angle_limit(motor_id)
+        max_angle = self.get_ccw_angle_limit(motor_id)
+        pos =  min_angle + int((max_angle -min_angle)/100 * percent)
+        print(motor_id, pos)
+        self.set_goal(motor_id,pos)
+
+    def set_all_goal_percent(self,percent):
+        for motor_id in self.get_motor_ids():
+            self.set_goal_percent(motor_id, percent)
 
     def set_moving_speed(self, motor_id: int, speed: int) -> None:
         """
@@ -157,7 +179,6 @@ class MotorCommands:
         """
         Reboots the motor with the given ID.
         """
-       
         current_alarm = self.motor_control.read(motor_id, ControlTable.EEPROM.SHUTDOWN.value, byte_size=1)
         print(f"Motor {motor_id}: alarm shutdown register = {bin(current_alarm)}")
         cleared = current_alarm & ~(1 << 5)  # clear bit 5 (overload)
@@ -178,7 +199,11 @@ class MotorCommands:
         """
         self.motor_control.close()
 
-    
+#if __name__ == "__main__":
+#    command = MotorCommands()
+ #   print(command.get_all_present_position_MX())
+   
+
 
     
 

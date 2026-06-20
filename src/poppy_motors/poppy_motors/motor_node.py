@@ -1,10 +1,10 @@
 import json
 
-from poppy_motors.motor_msg_mapper import MotorMsgMapper
+from motor_msg_mapper import MotorMsgMapper
 import rclpy
 from std_msgs.msg import String
 from rclpy.node import Node
-from poppy_motors.motors import MotorCommands
+from motors import MotorCommands
 
 class MotorNode(Node):
     def __init__(self):
