@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: mpu6050-raspberrypi
+Version: 1.2
+Summary: A Python module for accessing the MPU-6050 digital accelerometer and gyroscope on a Raspberry Pi.
+Home-page: https://github.com/m-rtijn/mpu6050
+Author: Martijn
+Author-email: martijn@mrtijn.nl
+License: MIT
+Keywords: mpu6050 raspberry
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: POSIX :: Linux
+
+hola_MESSAGE_DE_CYRILLE
