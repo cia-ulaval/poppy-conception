@@ -12,6 +12,7 @@ RUN apt-get update -q && \
             python3-pip \
             udev \
             git \
+            mpu6050 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN  pip3 install --no-cache-dir dynamixel-sdk --break-system-packages
