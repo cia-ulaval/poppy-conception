@@ -142,7 +142,7 @@ class MotorCommands:
         max_angle = self.get_ccw_angle_limit(motor_id)
         pos =  min_angle + int((max_angle -min_angle)/100 * percent)
         print(motor_id, pos)
-        self.set_goal(motor_id,pos)
+        self.set_goal(motor_id,pos) 
 
     def set_all_goal_percent(self,percent):
         for motor_id in self.get_motor_ids():
