@@ -41,6 +41,10 @@ def dynamic_set():
     commad.torque_enable_all()
     commad.set_goal_percent(31, 90)
     commad.set_goal_percent(34, 80)
+
+    def export_positions():
+        positions = commad.get_all_present_position_MX()
+        return positions
     while True:
         try:
             id = int(input("ID du moteur à set position : "))
@@ -49,7 +53,7 @@ def dynamic_set():
         except ValueError as e:
             print("invalid input")
             continue
-# dynamic_set()
+dynamic_set()
 
 def floss():
     def _set_initial_postion(motor_commands):
@@ -89,7 +93,7 @@ def floss():
     commad.torque_enable_all()
     commad.set_goal_percent(31, 90)
     commad.set_goal_percent(34, 80)
-
+ 
     def position_1():
         commad.set_goal_percent(51,35)
         commad.set_goal_percent(52, 35)
@@ -97,52 +101,50 @@ def floss():
         commad.set_goal_percent(41, 1)
         commad.set_goal_percent(42, 1)
         commad.set_goal_percent(43, 10)
-        time.sleep(1)
+        time.sleep(3)
 
     def position_2():
         commad.set_goal_percent(52, 1)
         commad.set_goal_percent(42, 35)
-        time.sleep(1)
+        time.sleep(3)
     
     def position_3():
         commad.set_goal_percent(52, 25)
         commad.set_goal_percent(41, 22)
         commad.set_goal_percent(42, 1)
-        time.sleep(1)
+        time.sleep(3)
 
     def position_4():
         commad.set_goal_percent(42, 25)
         commad.set_goal_percent(41, 1)
         commad.set_goal_percent(52, 1)
-        time.sleep(1)
+        time.sleep(3)
 
     def position_5():
         commad.set_goal_percent(51, 25)
-        commad.set_goal_percent(52, 25)
+        commad.set_goal_percent(52, 15)
         commad.set_goal_percent(42, 1)
-        time.sleep(1)
+        time.sleep(3)
     
     def position_6():
+        commad.set_goal_percent(51, 20)
         commad.set_goal_percent(52, 10)
-        commad.set_goal_percent(42, 25)
-        time.sleep(1)
+        time.sleep(3)
 
     def position_7():
-        commad.set_goal_percent(42, 1)
-        commad.set_goal_percent(52, 22)
-        commad.set_goal_percent(51, 35)
-        time.sleep(1)
+        position_1()
+        
     
     while True:
-        position_1()
-        position_2()
-        position_3()
+        # position_1()
+        # position_2()
+        # position_3()
         position_4()
-        position_5()
-        position_6()
-        position_7()
+        # position_5()
+        # position_6()
+        # position_7()
 
-floss()
+# floss()
 
 
 
