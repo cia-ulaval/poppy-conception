@@ -12,15 +12,14 @@ class MotorNode(Node):
         self.message_mapper = MotorMsgMapper()
         self.get_logger().info('Motor Node has been started.')
         self.motor_commands = MotorCommands()
+        self.motor_commands.reboot_all_motors()
         self.motor_commands.torque_disable_all()
         self.motor_commands.torque_enable_all()
         self.motor_commands.set_all_moving_speed(100) 
         self.motor_commands.set_all_torque_limit(500)  
         self._set_initial_postion()
         self.create_timer(1, self._send_motor_commands)
-
-
-        
+            
         
     def _set_initial_postion(self):
         self.motor_commands.set_goal(21, 2048)
