@@ -66,8 +66,11 @@ class MotorCommands:
         
         motorsDict : dict ={}
         for motor in self.motor_control.get_motors():
-            if self.get_model_number(motor) == (29 or 310): # Mx-64 and Mx-28 model numbers they can use bulk_read
+            if self.get_model_number(motor) in (29, 310): # Mx-64 and Mx-28 model numbers they can use bulk_read
                 motorsDict.update({motor:(ControlTable.RAM.PRESENT_POSITION.value, 2)})
+                print(self.get_model_number(motor))
+            else:
+                print("moteur non taken care of :",self.get_model_number(motor))
             
         return self.motor_control.bulk_read(motorsDict)
 
@@ -147,6 +150,11 @@ class MotorCommands:
     def set_all_goal_percent(self,percent):
         for motor_id in self.get_motor_ids():
             self.set_goal_percent(motor_id, percent)
+    
+    def set_all_goal(self, positions:dict[int, int]):
+        for id, pos in positions.items():
+            self.set_goal(motor_id=id, position=pos)
+        
 
     def set_moving_speed(self, motor_id: int, speed: int) -> None:
         """

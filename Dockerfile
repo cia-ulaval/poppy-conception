@@ -12,10 +12,13 @@ RUN apt-get update -q && \
             python3-pip \
             udev \
             git \
-            mpu6050 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN  pip3 install --no-cache-dir dynamixel-sdk --break-system-packages
+RUN  pip3 install --no-cache-dir \
+    dynamixel-sdk \
+    pandas \
+    mpu6050 \
+    --break-system-packages
 
 WORKDIR /ros2_ws
 
