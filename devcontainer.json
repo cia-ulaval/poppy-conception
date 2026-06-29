@@ -5,6 +5,7 @@
     "source=/home/poppy/work/poppy-conception,target=/ros2_ws,type=bind"
   ],
   "runArgs": [
-    "--device=/dev/ttyACM0:/dev/ttyACM0"
+    "--device=/dev/ttyACM0:/dev/ttyACM0",
+    "--device=/dev/i2c-1"
   ]
 }

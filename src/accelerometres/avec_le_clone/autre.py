@@ -16,7 +16,7 @@ import select
 class Accelerometre:
     def __init__(self):
         self.time = time.time()
-        self.mpu6050 = mpu6050.mpu6050(0x68)
+        self.accelero = mpu6050.MPU6050(a_bus=1, a_address=0x68)
         self.acc_x=0.   # Pour les 6 premiers, leurs valeurs seront écrasées immédiatement, sans avoir été utilisées.
         self.acc_y=0.
         self.acc_z=0.
@@ -36,7 +36,7 @@ class Accelerometre:
 
 
     def _read_sensor_data(self):
-        return self.mpu6050.get_accel_data(), self. mpu6050.get_gyro_data(), self.mpu6050.get_temp()
+        return self.accelero.get_acceleration(), self.accelero.get_rotation()
 
     def update(self,t1):
         data = self._read_sensor_data()

@@ -14,11 +14,13 @@ RUN apt-get update -q && \
             git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN  pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --ignore-installed --break-system-packages numpy && \
+    pip3 install --no-cache-dir --ignore-installed --break-system-packages \
     dynamixel-sdk \
     pandas \
     mpu6050 \
-    --break-system-packages
+    matplotlib \
+    scipy
 
 WORKDIR /ros2_ws
 
